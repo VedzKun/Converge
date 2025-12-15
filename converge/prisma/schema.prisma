@@ -1,0 +1,155 @@
+// Converge - Real-Time Collaboration Platform
+// Database Schema for PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Datasource URL is configured in prisma.config.ts for Prisma 7+
+datasource db {
+  provider = "sqlite"
+}
+
+// ============================================
+// USER MANAGEMENT
+// ============================================
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String
+  passwordHash  String
+  avatar        String?
+  color         String         @default("#6366f1") // User's cursor color
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  ownedDocuments    Document[]      @relation("DocumentOwner")
+  collaborations    Collaborator[]
+  sessions          Session[]
+
+  @@index([email])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+}
+
+// ============================================
+// DOCUMENT MANAGEMENT
+// ============================================
+
+model Document {
+  id            String         @id @default(uuid())
+  title         String         @default("Untitled Document")
+  
+  // Yjs state stored as binary for efficient storage
+  // This is the source of truth for document content
+  content       Bytes?         
+  
+  // Ownership
+  ownerId       String
+  owner         User           @relation("DocumentOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  
+  // Versioning for conflict detection
+  version       Int            @default(0)
+  
+  // Metadata
+  isPublic      Boolean        @default(false)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  collaborators Collaborator[]
+  snapshots     Snapshot[]
+  operations    Operation[]
+
+  @@index([ownerId])
+  @@index([updatedAt])
+}
+
+// ============================================
+// COLLABORATION & ACCESS CONTROL
+// ============================================
+
+enum Role {
+  OWNER    // Full control, can delete document
+  EDITOR   // Can edit content
+  VIEWER   // Read-only access
+}
+
+model Collaborator {
+  id         String   @id @default(uuid())
+  
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  role       Role     @default(VIEWER)
+  
+  // Invitation tracking
+  invitedAt  DateTime @default(now())
+  acceptedAt DateTime?
+  
+  @@unique([userId, documentId])
+  @@index([documentId])
+  @@index([userId])
+}
+
+// ============================================
+// OPERATION LOG & SNAPSHOTS
+// For recovery and version history
+// ============================================
+
+model Operation {
+  id         String   @id @default(uuid())
+  
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  // Who made this change
+  userId     String
+  
+  // Yjs update binary - the actual change
+  data       Bytes
+  
+  // Sequential version for ordering
+  version    Int
+  
+  createdAt  DateTime @default(now())
+
+  @@index([documentId, version])
+  @@index([documentId, createdAt])
+}
+
+model Snapshot {
+  id         String   @id @default(uuid())
+  
+  documentId String
+  document   Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  
+  // Full Yjs state at this point
+  data       Bytes
+  
+  // Version at snapshot time
+  version    Int
+  
+  // Optional label for named versions
+  label      String?
+  
+  createdAt  DateTime @default(now())
+
+  @@index([documentId, version])
+  @@index([documentId, createdAt])
+}
