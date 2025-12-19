@@ -5,6 +5,7 @@
 
 import Link from "next/link";
 import { FileText, Users, Zap, Shield, ArrowRight } from "lucide-react";
+import Navbar from "@/components/ui/navbar";
 
 export default function HomePage() {
   return (
@@ -16,33 +17,13 @@ export default function HomePage() {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 border-b border-gray-800/50 bg-gray-900/30 backdrop-blur-sm">
+      {/* Use reusable Navbar component for consistent styling */}
+      {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+      <header className="relative z-10 border-b border-gray-800/40 bg-gradient-to-b from-black/30 to-transparent backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
-                <FileText className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">Converge</span>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <Link
-                href="/login"
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/register"
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-medium hover:from-cyan-400 hover:to-blue-400 transition-all shadow-lg shadow-cyan-500/25"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
+          <Navbar />
         </div>
-      </nav>
+      </header>
 
       {/* Hero Section */}
       <section className="relative z-10 pt-20 pb-32 px-4">
