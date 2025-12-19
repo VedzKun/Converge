@@ -1,8 +1,9 @@
 // Converge - Real-Time Collaboration Platform
-// Database Schema for PostgreSQL
+// Database Schema for SQLite
 
 generator client {
-  provider = "prisma-client-js"
+  provider   = "prisma-client-js"
+  engineType = "library"
 }
 
 // Datasource URL is configured in prisma.config.ts for Prisma 7+
