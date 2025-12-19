@@ -198,22 +198,22 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-950">
       {/* Header */}
-      <header className="border-b border-gray-800 bg-gray-900/50 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-gray-800 bg-gradient-to-b from-black/30 to-transparent backdrop-blur-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <Link href="/dashboard" className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
-                <FileText className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-xl font-bold text-white">Converge</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/dashboard" className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-md">
+                  <FileText className="w-5 h-5 text-white" />
+                </div>
+                <span className="hidden sm:inline-block text-lg font-semibold text-white">Converge</span>
+              </Link>
+            </div>
 
-            {/* User menu */}
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-3 pr-3 border-r border-gray-800">
                 <UserAvatar user={user} size="sm" />
-                <span className="text-sm text-gray-300">{user.name}</span>
+                <span className="text-sm text-gray-300 hidden sm:inline">{user.name}</span>
               </div>
               <Button variant="ghost" size="icon" onClick={handleLogout}>
                 <LogOut className="h-4 w-4" />
