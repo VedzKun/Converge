@@ -19,7 +19,6 @@ import { Role } from "@prisma/client";
 import {
   Plus,
   Search,
-  FileText,
   Users,
   MoreVertical,
   Trash2,
@@ -29,6 +28,7 @@ import {
   Edit3,
   Eye,
 } from "lucide-react";
+import Logo from "@/components/ui/logo";
 
 // ============================================
 // TYPES
@@ -203,8 +203,8 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Link href="/dashboard" className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-md">
-                  <FileText className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg overflow-hidden flex items-center justify-center shadow-md">
+                  <Logo className="w-8 h-8" />
                 </div>
                 <span className="hidden sm:inline-block text-lg font-semibold text-white">Converge</span>
               </Link>
